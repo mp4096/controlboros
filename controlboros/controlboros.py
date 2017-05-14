@@ -37,12 +37,12 @@ class AbstractSystem(metaclass=ABCMeta):
         """
         self._state = np.array(state)
 
-    def push_stateful(self, input):
+    def push_stateful(self, inp):
         """Push an input into system, get the output, update system state.
 
         Parameters
         ----------
-        input : (num_inputs,) array_like
+        inp : (num_inputs,) array_like
             input vector at time :math:`k`
 
         Returns
@@ -50,10 +50,10 @@ class AbstractSystem(metaclass=ABCMeta):
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
         """
-        self._state, output = self.push_pure(input, self._state)
+        self._state, output = self.push_pure(inp, self._state)
         return output
 
-    def push_pure(self, state, input):
+    def push_pure(self, state, inp):
         """Push an input into system, get the output and new state.
 
         Note
@@ -65,7 +65,7 @@ class AbstractSystem(metaclass=ABCMeta):
         state : (num_states,) array_like
             state vector at time :math:`k`
 
-        input : (num_inputs,) array_like
+        inp : (num_inputs,) array_like
             input vector at time :math:`k`
 
         Returns
@@ -77,14 +77,14 @@ class AbstractSystem(metaclass=ABCMeta):
             output vector at time :math:`k` *(sic!)*
         """
         state = np.array(state)
-        input = np.array(input)
+        inp = np.array(inp)
 
         new_state = self.dynamics(state, inp)
         output = self.output(state)
         return new_state, output
 
     @abstractmethod
-    def dynamics(self, state, input):
+    def dynamics(self, state, inp):
         """Abstract system dynamics.
 
         Note
@@ -96,7 +96,7 @@ class AbstractSystem(metaclass=ABCMeta):
         state : (num_states,) ndarray
             state vector at time :math:`k`
 
-        input : (num_inputs,) ndarray
+        inp : (num_inputs,) ndarray
             input vector at time :math:`k`
 
         Returns
@@ -107,7 +107,7 @@ class AbstractSystem(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def output(self, state, input):
+    def output(self, state, inp):
         """Abstract system output.
 
         Note
@@ -119,7 +119,7 @@ class AbstractSystem(metaclass=ABCMeta):
         state : (num_states,) ndarray
             state vector at time :math:`k`
 
-        input : (num_inputs,) ndarray
+        inp : (num_inputs,) ndarray
             input vector at time :math:`k`
 
         Returns
@@ -185,7 +185,7 @@ class StateSpace(AbstractSystem):
         if not (aa_ok and ab_ok and cd_ok and ac_ok and bd_ok):
             raise ValueError("Invalid matrix dimensions.")
 
-    def dynamics(self, state, input):
+    def dynamics(self, state, inp):
         r"""Linear discrete-time dynamics equation.
 
         .. math::
@@ -198,7 +198,7 @@ class StateSpace(AbstractSystem):
         state : (num_states,) ndarray
             state vector at time :math:`k`
 
-        input : (num_inputs,) ndarray
+        inp : (num_inputs,) ndarray
             input vector at time :math:`k`
 
         Returns
@@ -206,9 +206,9 @@ class StateSpace(AbstractSystem):
         (num_states,) ndarray
             state vector at time :math:`k + 1`
         """
-        return self.a @ state + self.b @ input
+        return self.a @ state + self.b @ inp
 
-    def output(self, state, input):
+    def output(self, state, inp):
         r"""Linear output equation.
 
         .. math::
@@ -221,7 +221,7 @@ class StateSpace(AbstractSystem):
         state : (num_states,) ndarray
             state vector at time :math:`k`
 
-        input : (num_inputs,) ndarray
+        inp : (num_inputs,) ndarray
             input vector at time :math:`k`
 
         Returns
@@ -229,4 +229,4 @@ class StateSpace(AbstractSystem):
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
         """
-        return self.c @ state + self.d @ input
+        return self.c @ state + self.d @ inp
