@@ -1,3 +1,5 @@
+"""Sphinx configuration."""
+
 import os
 import sphinx_rtd_theme
 import sys

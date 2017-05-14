@@ -1,3 +1,5 @@
+"""Setup file for Controlboros."""
+
 try:
     from setuptools import setup
 except ImportError:
