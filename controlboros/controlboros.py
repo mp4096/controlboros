@@ -50,7 +50,7 @@ class AbstractSystem(metaclass=ABCMeta):
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
         """
-        self._state, output = self.push_pure(inp, self._state)
+        self._state, output = self.push_pure(self._state, inp)
         return output
 
     def push_pure(self, state, inp):
