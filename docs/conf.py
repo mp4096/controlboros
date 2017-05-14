@@ -31,9 +31,10 @@ pygments_style = "sphinx"
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
-    "numpydoc",
+    "sphinx.ext.napoleon",
     ]
 
 templates_path = []
@@ -45,6 +46,8 @@ master_doc = "index"
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 todo_include_todos = False
+
+autoclass_content = "both"
 
 html_static_path = ["_static"]
 

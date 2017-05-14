@@ -1,11 +1,12 @@
 Controlboros API reference
-=======================
+==========================
 
-.. toctree::
-   :maxdepth: 2
+.. automodule:: controlboros
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
