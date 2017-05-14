@@ -1,4 +1,4 @@
-# Controlboros
+![Controlboros logo](docs/_static/images/logo.png)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6dd7592be425486081fbe2cb859c2426)](https://www.codacy.com/app/mp4096/controlboros?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mp4096/controlboros&amp;utm_campaign=Badge_Grade)
 
