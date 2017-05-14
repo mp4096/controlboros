@@ -236,3 +236,16 @@ class StateSpace(AbstractSystem):
             output vector at time :math:`k` *(sic!)*
         """
         return self.c @ state + self.d @ inp
+
+    def __str__(self):
+        """Get human-friendly representation of the object."""
+        return "LTI discrete-time system.\n\n" \
+            "Dynamics matrix A:\n{:s}\n\n" \
+            "Input matrix B:\n{:s}\n\n" \
+            "Output matrix C:\n{:s}\n\n" \
+            "Feedthrough matrix D:\n{:s}\n".format(
+                np.array_str(self.a),
+                np.array_str(self.b),
+                np.array_str(self.c),
+                np.array_str(self.d),
+                )
