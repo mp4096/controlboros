@@ -26,4 +26,4 @@ Quickstart:
 make docs-api-serve
 ```
 
-The API reference is now served on port 8071 respectively.
+The API reference is now served on port 8071.
