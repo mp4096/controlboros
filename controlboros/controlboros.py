@@ -177,8 +177,8 @@ class StateSpace(AbstractSystem):
             self.d = np.array(d)
 
         aa_ok = self.a.shape[0] == self.a.shape[1]
-        ab_ok = self.a.shape[1] == self.b.shape[0]
-        cd_ok = self.c.shape[1] == self.d.shape[0]
+        ab_ok = self.a.shape[0] == self.b.shape[0]
+        cd_ok = self.c.shape[0] == self.d.shape[0]
         ac_ok = self.a.shape[1] == self.c.shape[1]
         bd_ok = self.b.shape[1] == self.d.shape[1]
 
