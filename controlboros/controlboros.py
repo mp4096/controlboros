@@ -10,12 +10,14 @@ class AbstractSystem(metaclass=ABCMeta):
     def __init__(self, num_states):
         """Create an abstract system object.
 
+        System state is always set to zero during initialisation.
+
         Parameters
         ----------
         num_states : int
             number of system state variables
         """
-        self._state = np.empty(num_states)
+        self._state = np.zeros((num_states,))
 
     def get_state(self):
         """Get current system state.
@@ -36,6 +38,10 @@ class AbstractSystem(metaclass=ABCMeta):
             new system state
         """
         self._state = np.array(state)
+
+    def set_state_to_zero(self):
+        """Set current system state to zeros."""
+        self._state[:] = 0.0
 
     def push_stateful(self, inp):
         """Push an input into system, get the output, update system state.
