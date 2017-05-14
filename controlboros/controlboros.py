@@ -80,7 +80,7 @@ class AbstractSystem(metaclass=ABCMeta):
         inp = np.array(inp)
 
         new_state = self.dynamics(state, inp)
-        output = self.output(state)
+        output = self.output(state, inp)
         return new_state, output
 
     @abstractmethod
