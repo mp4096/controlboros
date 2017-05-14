@@ -1,5 +1,12 @@
 .DEFAULT_GOAL := help
-.PHONY: install-dev init init-dev lint test help
+.PHONY: docs-api-build docs-api-serve \
+	install-dev init init-dev lint test help
+
+docs-api-build: ## Build the API reference
+	cd ./docs/ && make html
+
+docs-api-serve: docs-api-build ## Serve the API reference on localhost:8071
+	cd ./docs/_build/html/ && python -m http.server 8071
 
 install-dev: ## Dev install
 	python setup.py develop
