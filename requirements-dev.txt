@@ -1,0 +1,5 @@
+pydocstyle
+pycodestyle
+pytest
+sphinx
+sphinx-rtd-theme
