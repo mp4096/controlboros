@@ -1,3 +1,4 @@
+"""Tests for the LTI discrete-time systems."""
 import controlboros
 import numpy as np
 import pytest
