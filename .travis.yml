@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.5"
+  - "3.6"
+  - "nightly"
+install:
+  - make init
+  - make init-dev
+script:
+  - make test-coverage
+after_success: coveralls

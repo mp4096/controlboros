@@ -1,5 +1,6 @@
 ![Controlboros logo](docs/_static/images/logo.png)
 
+[![Build Status](https://travis-ci.org/mp4096/controlboros.svg?branch=master)](https://travis-ci.org/mp4096/controlboros)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6dd7592be425486081fbe2cb859c2426)](https://www.codacy.com/app/mp4096/controlboros?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mp4096/controlboros&amp;utm_campaign=Badge_Grade)
 
 Controlboros is a simple framework for simulating control systems.
