@@ -3,6 +3,7 @@ from controlboros import AbstractSystem
 import numpy as np
 
 # Make AbstractSystem concrete
+# pylint: disable=E0110
 AbstractSystem.__abstractmethods__ = set()
 
 
@@ -10,7 +11,7 @@ def test_default_initial_value():
     """Use zero vector as a default initial value."""
     num_states = 10
     s = AbstractSystem(num_states)
-    assert np.all(s._state == np.zeros((num_states,)))
+    assert np.all(s.get_state() == np.zeros((num_states,)))
 
 
 def test_state_getter_setter():
@@ -21,8 +22,7 @@ def test_state_getter_setter():
     rand_state = np.random.rand(num_states)
     s.set_state(rand_state)
 
-    assert np.all(s._state == rand_state)  # test setter
-    assert np.all(s._state == s.get_state())  # test getter
+    assert np.all(s.get_state() == rand_state)
 
 
 def test_set_state_to_zero():
@@ -30,9 +30,9 @@ def test_set_state_to_zero():
     num_states = 10
     s = AbstractSystem(num_states)
     s.set_state(np.ones((num_states,)))
-    assert np.all(s._state == np.ones((num_states,)))
+    assert np.all(s.get_state() == np.ones((num_states,)))
     s.set_state_to_zero()
-    assert np.all(s._state == np.zeros((num_states,)))
+    assert np.all(s.get_state() == np.zeros((num_states,)))
 
 
 def test_push_pure():

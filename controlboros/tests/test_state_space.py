@@ -87,7 +87,7 @@ def test_invalid_dynamics_matrix_dimensions():
     c = np.zeros((1, 2))
 
     with pytest.raises(ValueError) as excinfo:
-        s = controlboros.StateSpace(a, b, c)
+        controlboros.StateSpace(a, b, c)
     assert "Invalid matrix dimensions" in str(excinfo.value)
 
 
@@ -98,7 +98,7 @@ def test_invalid_input_matrix_dimensions():
     c = np.zeros((1, 2))
 
     with pytest.raises(ValueError) as excinfo:
-        s = controlboros.StateSpace(a, b, c)
+        controlboros.StateSpace(a, b, c)
     assert "Invalid matrix dimensions" in str(excinfo.value)
 
 
@@ -109,7 +109,7 @@ def test_invalid_output_matrix_dimensions():
     c = np.zeros((1, 3))
 
     with pytest.raises(ValueError) as excinfo:
-        s = controlboros.StateSpace(a, b, c)
+        controlboros.StateSpace(a, b, c)
     assert "Invalid matrix dimensions" in str(excinfo.value)
 
 
@@ -121,7 +121,7 @@ def test_invalid_feedthrough_matrix_dimensions():
     d = np.zeros((4, 2))
 
     with pytest.raises(ValueError) as excinfo:
-        s = controlboros.StateSpace(a, b, c, d)
+        controlboros.StateSpace(a, b, c, d)
     assert "Invalid matrix dimensions" in str(excinfo.value)
 
 
