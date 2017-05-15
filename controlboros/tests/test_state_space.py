@@ -1,5 +1,6 @@
 import controlboros
 import numpy as np
+import pytest
 
 
 def test_dynamics_single_input():
@@ -76,3 +77,48 @@ def test_output_mimo():
     s = controlboros.StateSpace(a, b, c, d)
 
     assert np.all(s.output([1.0, 1.0], [2.0, 3.0]) == np.array([3.0, 4.0]))
+
+
+def test_invalid_dynamics_matrix_dimensions():
+    """Test exception if A is not square."""
+    a = np.zeros((2, 1))
+    b = np.zeros((2, 1))
+    c = np.zeros((1, 2))
+
+    with pytest.raises(ValueError) as excinfo:
+        s = controlboros.StateSpace(a, b, c)
+    assert "Invalid matrix dimensions" in str(excinfo.value)
+
+
+def test_invalid_input_matrix_dimensions():
+    """Test exception if B and A have different number of rows."""
+    a = np.zeros((2, 2))
+    b = np.zeros((1, 1))
+    c = np.zeros((1, 2))
+
+    with pytest.raises(ValueError) as excinfo:
+        s = controlboros.StateSpace(a, b, c)
+    assert "Invalid matrix dimensions" in str(excinfo.value)
+
+
+def test_invalid_output_matrix_dimensions():
+    """Test exception if C and A have different number of columns."""
+    a = np.zeros((2, 2))
+    b = np.zeros((2, 1))
+    c = np.zeros((1, 3))
+
+    with pytest.raises(ValueError) as excinfo:
+        s = controlboros.StateSpace(a, b, c)
+    assert "Invalid matrix dimensions" in str(excinfo.value)
+
+
+def test_invalid_feedthrough_matrix_dimensions():
+    """Test exception if D does not match to B and C."""
+    a = np.zeros((2, 2))
+    b = np.zeros((2, 3))
+    c = np.zeros((4, 2))
+    d = np.zeros((4, 2))
+
+    with pytest.raises(ValueError) as excinfo:
+        s = controlboros.StateSpace(a, b, c, d)
+    assert "Invalid matrix dimensions" in str(excinfo.value)
