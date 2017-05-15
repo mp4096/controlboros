@@ -122,3 +122,27 @@ def test_invalid_feedthrough_matrix_dimensions():
     with pytest.raises(ValueError) as excinfo:
         s = controlboros.StateSpace(a, b, c, d)
     assert "Invalid matrix dimensions" in str(excinfo.value)
+
+
+def test_human_friendly_form():
+    """Test the __str__() method of a StateSpace object."""
+    a = np.array([[1.0, 2.0], [0.0, 1.0]])
+    b = np.array([[1.0, 2.0], [3.0, 2.0]])
+    c = np.zeros((1, 2))
+
+    s = controlboros.StateSpace(a, b, c)
+
+    reference = \
+        "LTI discrete-time system.\n\n" \
+        "Dynamics matrix A:\n" \
+        "[[ 1.  2.]\n" \
+        " [ 0.  1.]]\n\n" \
+        "Input matrix B:\n" \
+        "[[ 1.  2.]\n" \
+        " [ 3.  2.]]\n\n" \
+        "Output matrix C:\n" \
+        "[[ 0.  0.]]\n\n" \
+        "Feedthrough matrix D:\n" \
+        "[[ 0.  0.]]\n"
+
+    assert s.__str__() == reference
