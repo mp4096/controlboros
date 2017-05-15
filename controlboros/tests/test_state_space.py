@@ -146,3 +146,13 @@ def test_human_friendly_form():
         "[[ 0.  0.]]\n"
 
     assert s.__str__() == reference
+
+
+def test_auto_feedthrough_matrix():
+    """Test if a zero feedthrough matrix is created if none specified."""
+    a = np.zeros((2, 2))
+    b = np.zeros((2, 3))
+    c = np.zeros((4, 2))
+
+    s = controlboros.StateSpace(a, b, c)
+    assert s.d.shape == (4, 3)
