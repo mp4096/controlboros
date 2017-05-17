@@ -1,5 +1,5 @@
 """Tests for the LTI discrete-time systems."""
-import controlboros
+from controlboros import StateSpace
 import numpy as np
 import pytest
 
@@ -11,7 +11,7 @@ def test_dynamics_single_input():
     b = np.array([[1.0], [3.0]])
     c = np.zeros((1, 2))
 
-    s = controlboros.StateSpace(a, b, c)
+    s = StateSpace(a, b, c)
 
     assert np.all(s.dynamics([1.0, 1.0], [1.0]) == np.array([4.0, 4.0]))
 
@@ -23,7 +23,7 @@ def test_dynamics_multiple_inputs():
     b = np.array([[1.0, 2.0], [3.0, 2.0]])
     c = np.zeros((1, 2))
 
-    s = controlboros.StateSpace(a, b, c)
+    s = StateSpace(a, b, c)
 
     assert np.all(s.dynamics([1.0, 1.0], [1.0, 0.0]) == np.array([4.0, 4.0]))
 
@@ -36,7 +36,7 @@ def test_output_siso():
     c = np.array([[1.0, 1.0]])
     d = np.array([[2.0]])
 
-    s = controlboros.StateSpace(a, b, c, d)
+    s = StateSpace(a, b, c, d)
 
     assert s.output([1.0, 1.0], [1.0]) == np.array([4.0])
 
@@ -49,7 +49,7 @@ def test_output_simo():
     c = np.eye(2)
     d = np.array([[2.0], [3.0]])
 
-    s = controlboros.StateSpace(a, b, c, d)
+    s = StateSpace(a, b, c, d)
 
     assert np.all(s.output([1.0, 1.0], [1.0]) == np.array([3.0, 4.0]))
 
@@ -62,7 +62,7 @@ def test_output_miso():
     c = np.array([[1.0, 1.0]])
     d = np.array([[2.0, 3.0]])
 
-    s = controlboros.StateSpace(a, b, c, d)
+    s = StateSpace(a, b, c, d)
 
     assert np.all(s.output([1.0, 1.0], [1.0, 1.0]) == np.array([7.0]))
 
@@ -75,7 +75,7 @@ def test_output_mimo():
     c = np.eye(2)
     d = np.eye(2)
 
-    s = controlboros.StateSpace(a, b, c, d)
+    s = StateSpace(a, b, c, d)
 
     assert np.all(s.output([1.0, 1.0], [2.0, 3.0]) == np.array([3.0, 4.0]))
 
@@ -87,7 +87,7 @@ def test_invalid_state_matrix_dimensions():
     c = np.zeros((1, 2))
 
     with pytest.raises(ValueError) as excinfo:
-        controlboros.StateSpace(a, b, c)
+        StateSpace(a, b, c)
     assert "Invalid matrix dimensions" in str(excinfo.value)
 
 
@@ -98,7 +98,7 @@ def test_invalid_input_matrix_dimensions():
     c = np.zeros((1, 2))
 
     with pytest.raises(ValueError) as excinfo:
-        controlboros.StateSpace(a, b, c)
+        StateSpace(a, b, c)
     assert "Invalid matrix dimensions" in str(excinfo.value)
 
 
@@ -109,7 +109,7 @@ def test_invalid_output_matrix_dimensions():
     c = np.zeros((1, 3))
 
     with pytest.raises(ValueError) as excinfo:
-        controlboros.StateSpace(a, b, c)
+        StateSpace(a, b, c)
     assert "Invalid matrix dimensions" in str(excinfo.value)
 
 
@@ -121,7 +121,7 @@ def test_invalid_feedthrough_matrix_dimensions():
     d = np.zeros((4, 2))
 
     with pytest.raises(ValueError) as excinfo:
-        controlboros.StateSpace(a, b, c, d)
+        StateSpace(a, b, c, d)
     assert "Invalid matrix dimensions" in str(excinfo.value)
 
 
@@ -131,7 +131,7 @@ def test_human_friendly_form():
     b = np.array([[1.0, 2.0], [3.0, 2.0]])
     c = np.zeros((1, 2))
 
-    s = controlboros.StateSpace(a, b, c)
+    s = StateSpace(a, b, c)
 
     reference = \
         "LTI discrete-time system.\n\n" \
@@ -155,5 +155,5 @@ def test_auto_feedthrough_matrix():
     b = np.zeros((2, 3))
     c = np.zeros((4, 2))
 
-    s = controlboros.StateSpace(a, b, c)
+    s = StateSpace(a, b, c)
     assert s.d.shape == (4, 3)
