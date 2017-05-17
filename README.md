@@ -8,6 +8,7 @@ Controlboros is a simple framework for simulating control systems.
 
 ### FAQ
 
+
 > Why should I use Controlboros if I can simulate systems using `python-control` or `scipy.signal`?
 
 Controlboros allows greater flexibility in the implementation of your system blocks.
@@ -22,6 +23,7 @@ and call into MATLAB code.
 
 Kind of. You can resolve a loop by adding a unit delay.
 
+
 > But then you'll get an inexact solution!
 
 [¯\\\_(ツ)_/¯](https://cloud.githubusercontent.com/assets/5394551/26149729/b23b51b0-3afb-11e7-89de-f3ddd9b02a0c.gif)
@@ -29,6 +31,21 @@ Kind of. You can resolve a loop by adding a unit delay.
 But seriously, you should simulate with small time steps.
 [This notebook](examples/simple_control_loop.ipynb)
 demonstrates the consequences of a unit delay in the feedback loop for different time step sizes.
+
+
+> What's the deal with `push_stateful` and `push_pure`?
+
+`push_pure` may not have any side effects and is intended for testing
+(yes, you should definitely unit test your code!).
+`push_stateful` has the side effect of mutating the system state.
+It is useful when writing actual simulation code.
+
+
+> Help! I get different simulation results each time I run my code cell!
+
+Do you use `push_stateful`? If yes, do you set the initial state explicitly
+before running the simulation?
+
 
 ### Requirements
 
