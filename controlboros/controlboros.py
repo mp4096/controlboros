@@ -145,7 +145,7 @@ class StateSpace(AbstractSystem):
         Parameters
         ----------
         a : (num_states, num_states) array_like
-            dynamics matrix :math:`\mathbf{A}`
+            state matrix :math:`\mathbf{A}`
         b : (num_states, num_inputs) array_like
             input matrix :math:`\mathbf{B}`
         c : (num_outputs, num_states) array_like
@@ -240,7 +240,7 @@ class StateSpace(AbstractSystem):
     def __str__(self):
         """Get human-friendly representation of the object."""
         return "LTI discrete-time system.\n\n" \
-            "Dynamics matrix A:\n{:s}\n\n" \
+            "State matrix A:\n{:s}\n\n" \
             "Input matrix B:\n{:s}\n\n" \
             "Output matrix C:\n{:s}\n\n" \
             "Feedthrough matrix D:\n{:s}\n".format(

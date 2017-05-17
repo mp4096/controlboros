@@ -80,7 +80,7 @@ def test_output_mimo():
     assert np.all(s.output([1.0, 1.0], [2.0, 3.0]) == np.array([3.0, 4.0]))
 
 
-def test_invalid_dynamics_matrix_dimensions():
+def test_invalid_state_matrix_dimensions():
     """Test exception if A is not square."""
     a = np.zeros((2, 1))
     b = np.zeros((2, 1))
@@ -135,7 +135,7 @@ def test_human_friendly_form():
 
     reference = \
         "LTI discrete-time system.\n\n" \
-        "Dynamics matrix A:\n" \
+        "State matrix A:\n" \
         "[[ 1.  2.]\n" \
         " [ 0.  1.]]\n\n" \
         "Input matrix B:\n" \
