@@ -4,6 +4,46 @@ from abc import ABCMeta, abstractmethod
 import numpy as np
 
 
+def _state_space_dimensions_ok(a, b, c, d):
+    r"""Check if matrices A, B, C, D form a valid state-space system.
+
+    Parameters
+    ----------
+    a : (num_states, num_states) array_like
+        state matrix :math:`\mathbf{A}`
+    b : (num_states, num_inputs) array_like
+        input matrix :math:`\mathbf{B}`
+    c : (num_outputs, num_states) array_like
+        output matrix :math:`\mathbf{C}`
+    d : (num_outputs, num_inputs) array_like
+        feedthrough matrix :math:`\mathbf{D}`
+
+    Returns
+    -------
+    bool
+        ``True`` if matrices $\mathbf{A}$, $\mathbf{B}$, $\mathbf{C}$,
+        $\mathbf{D}$ can be concatenated to the following block:
+
+        .. math::
+
+            \begin{bmatrix}
+                \mathbf{A} & \mathbf{B} \\
+                \mathbf{C} & \mathbf{D}
+            \end{bmatrix}
+
+        ``False``` otherwise.
+    """
+    a, b, c, d = np.array(a), np.array(b), np.array(c), np.array(d)
+
+    aa_ok = a.shape[0] == a.shape[1]
+    ab_ok = a.shape[0] == b.shape[0]
+    cd_ok = c.shape[0] == d.shape[0]
+    ac_ok = a.shape[1] == c.shape[1]
+    bd_ok = b.shape[1] == d.shape[1]
+
+    return aa_ok and ab_ok and cd_ok and ac_ok and bd_ok
+
+
 class AbstractSystem(metaclass=ABCMeta):
     """Abstract discrete-time systems."""
 
@@ -182,13 +222,7 @@ class StateSpace(AbstractSystem):
         else:
             self.d = np.array(d)
 
-        aa_ok = self.a.shape[0] == self.a.shape[1]
-        ab_ok = self.a.shape[0] == self.b.shape[0]
-        cd_ok = self.c.shape[0] == self.d.shape[0]
-        ac_ok = self.a.shape[1] == self.c.shape[1]
-        bd_ok = self.b.shape[1] == self.d.shape[1]
-
-        if not (aa_ok and ab_ok and cd_ok and ac_ok and bd_ok):
+        if not _state_space_dimensions_ok(self.a, self.b, self.c, self.d):
             raise ValueError("Invalid matrix dimensions.")
 
     def dynamics(self, state, inp):
