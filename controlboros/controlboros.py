@@ -2,6 +2,7 @@
 
 from abc import ABCMeta, abstractmethod
 import numpy as np
+from scipy import signal
 
 
 def _state_space_dimensions_ok(a, b, c, d):
@@ -285,3 +286,157 @@ class StateSpace(AbstractSystem):
                 np.array_str(self.c),
                 np.array_str(self.d),
                 )
+
+
+class StateSpaceBuilder():
+    r"""Builder for LTI discrete-time state-space models.
+
+    This class allows you to conveniently create discrete-time
+    ``controlboros.StateSpace``
+    objects from continuous-time transfer functions,
+    zeros, poles, gain or state-space models.
+
+    Examples
+    --------
+    Use a builder like this:
+
+        >>> my_sys = StateSpaceBuilder().from_tf([1.0], [1.0, 1.5, 1.0])\
+        ...                             .discretise(1.0e-3)\
+        ...                             .build()
+
+    """
+
+    def __init__(self):
+        """Create an empty object."""
+        self._a = None
+        self._b = None
+        self._c = None
+        self._d = None
+        self._discrete = False
+
+    def build(self):
+        """Build a ``StateSpace`` system.
+
+        Returns
+        -------
+        controlboros.StateSpace
+            built discrete-time LTI system
+        """
+        # Check if all system matrices are specified
+        if any(m is None for m in [self._a, self._b, self._c, self._d]):
+            raise ValueError("Cannot build, no system specified.")
+        # Check if the system has been discretised
+        if not self._discrete:
+            raise ValueError("Cannot build, discretise the system first.")
+        # If everything ok, return the built system
+        return StateSpace(self._a, self._b, self._c, self._d)
+
+    def from_tf(self, num, den):
+        """Define a SISO system using the transfer function representation.
+
+        Parameters
+        ----------
+        num : (len_numerator,) array_like
+            transfer function numerator in descending exponent order
+
+        den : (len_denominator,) array_like
+            transfer function denominator in descending exponent order
+
+        Returns
+        -------
+        controlboros.StateSpaceBuilder
+            intermediate builder object
+        """
+        tf = signal.TransferFunction(num, den).to_ss()
+        self._a, self._b, self._c, self._d = tf.A, tf.B, tf.C, tf.D
+        return self
+
+    def from_zpk(self, zeros, poles, gain):
+        """Define a SISO system using the zeros, poles, gain representation.
+
+        Parameters
+        ----------
+        zeros : (num_zeros,) array_like
+            system zeros
+
+        poles : (num_poles,) array_like
+            system poles
+
+        gain : float
+            system gain
+
+        Returns
+        -------
+        controlboros.StateSpaceBuilder
+            intermediate builder object
+        """
+        zpk = signal.ZerosPolesGain(zeros, poles, gain).to_ss()
+        self._a, self._b, self._c, self._d = zpk.A, zpk.B, zpk.C, zpk.D
+        return self
+
+    def from_ss(self, a, b, c, d=None):
+        r"""Define a system using the state-space representation.
+
+        Parameters
+        ----------
+        a : (num_states, num_states) array_like
+            state matrix :math:`\mathbf{A}`
+
+        b : (num_states, num_inputs) array_like
+            input matrix :math:`\mathbf{B}`
+
+        c : (num_outputs, num_states) array_like
+            output matrix :math:`\mathbf{C}`
+
+        d : None or (num_outputs, num_inputs) array_like
+            feedthrough matrix :math:`\mathbf{D}`;
+            defaults to :math:`\mathbf{0}` if not specified
+
+        Returns
+        -------
+        controlboros.StateSpaceBuilder
+            intermediate builder object
+        """
+        self._a, self._b, self._c = np.array(a), np.array(b), np.array(c)
+
+        num_inputs, num_outputs = self._b.shape[1], self._c.shape[0]
+
+        if d is None:
+            self._d = np.zeros((num_outputs, num_inputs))
+        else:
+            self._d = np.array(d)
+
+        if not _state_space_dimensions_ok(self._a, self._b, self._c, self._d):
+            raise ValueError("Invalid matrix dimensions.")
+
+        return self
+
+    def discretise(self, dt, method="zoh", alpha=None):
+        """Transform a continuous-time system into a discrete-time one.
+
+        Parameters
+        ----------
+        dt : float
+            the discretisation time step
+
+        method : str, optional
+            discretisation method,
+            refer to the documentation for ``scipy.signal.cont2discrete``
+
+        alpha : float within [0, 1], optional
+            weighting parameter,
+            refer to the documentation for ``scipy.signal.cont2discrete``
+
+        Returns
+        -------
+        controlboros.StateSpaceBuilder
+            intermediate builder object
+        """
+        self._a, self._b, self._c, self._d, _ = signal.cont2discrete(
+            (self._a, self._b, self._c, self._d),
+            dt,
+            method=method,
+            alpha=alpha,
+            )
+        self._discrete = True
+        return self
