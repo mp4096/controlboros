@@ -186,14 +186,16 @@ class StateSpace(AbstractSystem):
         ----------
         a : (num_states, num_states) array_like
             state matrix :math:`\mathbf{A}`
+
         b : (num_states, num_inputs) array_like
             input matrix :math:`\mathbf{B}`
+
         c : (num_outputs, num_states) array_like
             output matrix :math:`\mathbf{C}`
-        d : None or (num_outputs, num_inputs) array_like
-            feedthrough matrix :math:`\mathbf{D}`
 
-            Defaults to :math:`\mathbf{0}` if not specified.
+        d : None or (num_outputs, num_inputs) array_like
+            feedthrough matrix :math:`\mathbf{D}`;
+            defaults to :math:`\mathbf{0}` if not specified
 
         Raises
         ------
