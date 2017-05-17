@@ -12,5 +12,5 @@ setup(
     license="BSD",
     author="Mikhail Pak <mikhail.pak@tum.de>",
     packages=["controlboros"],
-    install_requires=["numpy", "scipy", "control"]
+    install_requires=["numpy", "scipy"]
     )
