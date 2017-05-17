@@ -24,7 +24,7 @@ Kind of. You can resolve a loop by adding a unit delay.
 
 > But then you'll get an inexact solution!
 
-[`¯\_(ツ)_/¯`](https://cloud.githubusercontent.com/assets/5394551/26149729/b23b51b0-3afb-11e7-89de-f3ddd9b02a0c.gif)
+[¯\\\_(ツ)_/¯](https://cloud.githubusercontent.com/assets/5394551/26149729/b23b51b0-3afb-11e7-89de-f3ddd9b02a0c.gif)
 
 
 ### Requirements
