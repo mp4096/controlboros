@@ -486,7 +486,7 @@ class RateWrapper(AbstractSystem):
         """
         return self._system.get_state()
 
-    def set_state(self, new_state):
+    def set_state(self, state):
         """Set current state of the wrapped system.
 
         Parameters
@@ -494,7 +494,7 @@ class RateWrapper(AbstractSystem):
         state : (num_states,) array_like
             new system state
         """
-        self._system.set_state(new_state)
+        self._system.set_state(state)
 
     def set_state_to_zero(self):
         """Set current state of the wrapped system to zeros."""
