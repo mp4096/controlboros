@@ -440,3 +440,163 @@ class StateSpaceBuilder():
             )
         self._discrete = True
         return self
+
+
+class RateWrapper(AbstractSystem):
+    """Wrap a system to simulate it at a smaller time step size.
+
+    Suppose you want to run a simulation with a 1 ms time step.
+    However, one system must be discretised at 10 ms. What should you do?
+    You wrap your system into a ``controlboros.RateWrapper`` object.
+    Then your system is called only every 10 ms, and inbetween
+    the most recent output is used.
+    """
+
+    def __init__(self, system, rate_multiplier):
+        """Create a wrapped system.
+
+        Parameters
+        ----------
+        system : obj derived from controlboros.AbstractSystem
+            system to wrap
+
+        rate_multiplier : int
+            sample rate multiplier, i.e. for how many samples
+            should the system's output be held constant;
+            must be an integer greater than 1
+        """
+        if not isinstance(rate_multiplier, int):
+            raise ValueError("Rate multiplier must be an integer.")
+
+        if rate_multiplier <= 1:
+            raise ValueError("Rate multiplier must be greater than 1.")
+
+        self._output_buffer = None
+        self._counter = 0
+        self._system = system
+        self.rate_multiplier = rate_multiplier
+
+    def get_state(self):
+        """Get current state of the wrapped system.
+
+        Returns
+        -------
+        (num_states,) ndarray
+            current system state
+        """
+        return self._system.get_state()
+
+    def set_state(self, new_state):
+        """Set current state of the wrapped system.
+
+        Parameters
+        ----------
+        state : (num_states,) array_like
+            new system state
+        """
+        self._system.set_state(new_state)
+
+    def set_state_to_zero(self):
+        """Set current state of the wrapped system to zeros."""
+        self._system.set_state_to_zero()
+
+    def push_stateful(self, inp):
+        """Call wrapped system's push_stateful() or use buffered output.
+
+        This function uses an internal counter to decide whether the wrapped
+        system (and the buffered output) should be updated. If not, it just
+        returns the buffered output.
+
+        Parameters
+        ----------
+        inp : (num_inputs,) array_like
+            input vector at time :math:`k`
+
+        Returns
+        -------
+        (num_outputs,) ndarray
+            output vector at time :math:`k` *(sic!)*
+        """
+        if self._counter >= self.rate_multiplier:
+            self._counter = 0
+
+        if self._counter == 0:
+            self._output_buffer = self._system.push_stateful(inp)
+
+        self._counter += 1
+        return self._output_buffer
+
+    def push_pure(self, state, inp):
+        """Push an input into the wrapped system, get the output and new state.
+
+        Note
+        ----
+        This function does not affect the states stored in the wrapper object
+        and the wrapped system!
+
+        Parameters
+        ----------
+        state : (num_states,) array_like
+            state vector at time :math:`k`
+
+        inp : (num_inputs,) array_like
+            input vector at time :math:`k`
+
+        Returns
+        -------
+        new_state : (num_states,) ndarray
+            state vector at time :math:`k + 1`
+
+        output : (num_outputs,) ndarray
+            output vector at time :math:`k` *(sic!)*
+        """
+        return self._system.push_pure(state, inp)
+
+    def dynamics(self, state, inp):
+        """Call wrapped system's dynamics() method.
+
+        Note
+        ----
+        This must be a pure function!
+
+        Parameters
+        ----------
+        state : (num_states,) ndarray
+            state vector at time :math:`k`
+
+        inp : (num_inputs,) ndarray
+            input vector at time :math:`k`
+
+        Returns
+        -------
+        (num_states,) ndarray
+            state vector at time :math:`k + 1`
+        """
+        return self._system.dynamics(state, inp)
+
+    def output(self, state, inp):
+        """Call wrapped system's output() method.
+
+        Note
+        ----
+        This must be a pure function!
+
+        Parameters
+        ----------
+        state : (num_states,) ndarray
+            state vector at time :math:`k`
+
+        inp : (num_inputs,) ndarray
+            input vector at time :math:`k`
+
+        Returns
+        -------
+        (num_outputs,) ndarray
+            output vector at time :math:`k` *(sic!)*
+        """
+        return self._system.output(state, inp)
+
+    def reset_wrapper(self):
+        """Reset the wrapper counter and output."""
+        self._output_buffer = None
+        self._counter = 0

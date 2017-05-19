@@ -7,4 +7,9 @@ import warnings
 
 __version__ = "0.1"
 
-from .controlboros import AbstractSystem, StateSpace, StateSpaceBuilder
+from .controlboros import (
+    AbstractSystem,
+    StateSpace,
+    StateSpaceBuilder,
+    RateWrapper,
+    )
