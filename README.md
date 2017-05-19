@@ -31,6 +31,8 @@ Kind of. You can resolve a loop by adding a unit delay.
 But seriously, you should simulate with small time steps.
 [This notebook](examples/simple_control_loop.ipynb)
 demonstrates the consequences of a unit delay in the feedback loop for different time step sizes.
+You can also [wrap your systems](examples/simple_multi-rate_simulation.ipynb)
+to simulate with a smaller time step than the discretisation time step.
 
 
 > What's the deal with `push_stateful` and `push_pure`?
