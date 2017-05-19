@@ -78,7 +78,7 @@ class AbstractSystem(metaclass=ABCMeta):
         state : (num_states,) array_like
             new system state
         """
-        self._state = np.array(state)
+        self._state[:] = np.array(state)
 
     def set_state_to_zero(self):
         """Set current system state to zeros."""

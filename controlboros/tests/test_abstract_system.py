@@ -1,6 +1,7 @@
 """Tests for the abstract system class."""
 from controlboros import AbstractSystem
 import numpy as np
+import pytest
 
 # Make AbstractSystem concrete
 # pylint: disable=E0110
@@ -23,6 +24,28 @@ def test_state_getter_setter():
     s.set_state(rand_state)
 
     assert np.all(s.get_state() == rand_state)
+
+
+def test_state_setter_invalid_shape():
+    """Test exception if trying to set incorrect state shape."""
+    num_states = 4
+    s = AbstractSystem(num_states)
+
+    with pytest.raises(ValueError) as excinfo:
+        s.set_state(np.zeros((5,)))
+    assert "could not broadcast" in str(excinfo.value)
+
+    with pytest.raises(ValueError) as excinfo:
+        s.set_state(np.zeros((4, 1)))
+    assert "could not broadcast" in str(excinfo.value)
+
+    with pytest.raises(ValueError) as excinfo:
+        s.set_state(np.zeros((2,)))
+    assert "could not broadcast" in str(excinfo.value)
+
+    with pytest.raises(ValueError) as excinfo:
+        s.set_state(np.zeros((2, 2)))
+    assert "could not broadcast" in str(excinfo.value)
 
 
 def test_set_state_to_zero():
