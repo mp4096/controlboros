@@ -233,8 +233,8 @@ class StateSpace(AbstractSystem):
 
         .. math::
 
-            \mathbf{x}_{k + 1} = \mathbf{A} \mathbf{x}_k +
-                                 \mathbf{B} \mathbf{u}_k
+            \mathbf{x}[k + 1] = \mathbf{A} \mathbf{x}[k] +
+                                \mathbf{B} \mathbf{u}[k]
 
         Parameters
         ----------
@@ -256,8 +256,8 @@ class StateSpace(AbstractSystem):
 
         .. math::
 
-            \mathbf{y}_{k} = \mathbf{C} \mathbf{x}_k +
-                             \mathbf{D} \mathbf{u}_k
+            \mathbf{y}[k] = \mathbf{C} \mathbf{x}[k] +
+                            \mathbf{D} \mathbf{u}[k]
 
         Parameters
         ----------
