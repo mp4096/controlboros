@@ -292,7 +292,7 @@ class StateSpaceBuilder():
     r"""Builder for LTI discrete-time state-space models.
 
     This class allows you to conveniently create discrete-time
-    ``controlboros.StateSpace``
+    :class:`controlboros.StateSpace`
     objects from continuous-time transfer functions,
     zeros, poles, gain or state-space models.
 
@@ -315,7 +315,7 @@ class StateSpaceBuilder():
         self._discrete = False
 
     def build(self):
-        """Build a ``StateSpace`` system.
+        """Build a :class:`StateSpace` system.
 
         Returns
         -------
@@ -420,12 +420,12 @@ class StateSpaceBuilder():
             the discretisation time step
 
         method : str, optional
-            discretisation method,
-            refer to the documentation for ``scipy.signal.cont2discrete``
+            discretisation method, refer to the documentation for
+            :func:`scipy.signal.cont2discrete`
 
         alpha : float within [0, 1], optional
-            weighting parameter,
-            refer to the documentation for ``scipy.signal.cont2discrete``
+            weighting parameter, refer to the documentation for
+            :func:`scipy.signal.cont2discrete`
 
         Returns
         -------
@@ -447,7 +447,7 @@ class RateWrapper(AbstractSystem):
 
     Suppose you want to run a simulation with a 1 ms time step.
     However, one system must be discretised at 10 ms. What should you do?
-    You wrap your system into a ``controlboros.RateWrapper`` object.
+    You wrap your system into a :class:`controlboros.RateWrapper` object.
     Then your system is called only every 10 ms, and inbetween
     the most recent output is used.
     """
