@@ -1,4 +1,56 @@
-"""The Controlboros framework."""
+"""The Controlboros framework.
+
+Abstract class for dynamical systems
+====================================
+
+:class:`AbstractSystem`
+-----------------------
+
+.. autoclass:: AbstractSystem
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Generic discrete-time LTI models
+================================
+
+:class:`StateSpace`
+-------------------
+
+.. autoclass:: StateSpace
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:class:`StateSpaceBuilder`
+--------------------------
+
+.. autoclass:: StateSpaceBuilder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Rate wrapper for multirate simulations
+======================================
+
+:class:`RateWrapper`
+--------------------
+.. autoclass:: RateWrapper
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Some useful systems
+===================
+
+:class:`Time delay`
+-------------------
+
+.. autoclass:: TimeDelay
+    :members:
+    :undoc-members:
+    :show-inheritance:
+"""
 
 from abc import ABCMeta, abstractmethod
 import numpy as np

@@ -1,10 +1,11 @@
-Controlboros API reference
-==========================
+============
+Controlboros
+============
 
-.. automodule:: controlboros
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
+   :maxdepth: 3
+
+   controlboros.rst
 
 Indices and tables
 ==================
