@@ -600,3 +600,99 @@ class RateWrapper(AbstractSystem):
         """Reset the wrapper counter and output."""
         self._output_buffer = None
         self._counter = 0
+
+
+class TimeDelay(AbstractSystem):
+    r"""Discrete time delay system.
+
+    This object provides a :math:`m` samples long delay line.
+    It supports scalar as well as vector-valued signals.
+
+    Its state vector is given by the following vector
+    of dimension :math:`mn`:
+
+    .. math::
+
+        \begin{bmatrix}
+            x_1[k - m] \\
+            \vdots \\
+            x_n[k - m] \\
+            x_1[k - 2] \\
+            \vdots \\
+            x_n[k - 2] \\
+            x_1[k - 1] \\
+            \vdots \\
+            x_n[k - 1]
+        \end{bmatrix}
+
+    Note
+    ----
+    This implementation is not a circular buffer / FIFO queque,
+    i.e. it is not the most efficient implementation. Instead, it stays
+    in line with the Controlboros philosophy of stateful wrappers around
+    pure functions, thus emphasising ease of debugging over efficiency.
+    """
+
+    def __init__(self, num_samples, dim=1):
+        """Create a time delay line.
+
+        Parameters
+        ----------
+        num_samples : int
+            delay length (in samples), must be greater than 0
+
+        dim : int, optional
+            signal dimension, scalar by default
+        """
+        if not isinstance(num_samples, int):
+            raise ValueError("Number of delay samples must be an integer.")
+
+        if num_samples <= 0:
+            raise ValueError("Number of delay samples must be greater than 0.")
+
+        if not isinstance(dim, int):
+            raise ValueError("Dimension of signal must be an integer.")
+
+        if dim <= 0:
+            raise ValueError("Dimension of signal must be greater than 0.")
+
+        self.dim = dim
+        super().__init__(num_samples*dim)
+
+    def dynamics(self, state, inp):
+        """Time line dynamics.
+
+        Parameters
+        ----------
+        state : (num_states,) ndarray
+            state vector at time :math:`k`
+
+        inp : (num_inputs,) ndarray
+            input vector at time :math:`k`
+
+        Returns
+        -------
+        (num_states,) ndarray
+            state vector at time :math:`k + 1`
+        """
+        return np.concatenate((state[self.dim:], inp))
+
+    def output(self, state, inp):
+        """Time delay output.
+
+        The output is the signal delayed by :math:`m` samples.
+
+        Parameters
+        ----------
+        state : (num_states,) ndarray
+            state vector at time :math:`k`
+
+        inp : (num_inputs,) ndarray
+            input vector at time :math:`k`
+
+        Returns
+        -------
+        (num_outputs,) ndarray
+            output vector at time :math:`k` *(sic!)*
+        """
+        return state[:self.dim]
