@@ -85,6 +85,7 @@ def _state_space_dimensions_ok(a, b, c, d):
             \end{bmatrix}
 
         ``False``` otherwise.
+
     """
     a, b, c, d = np.array(a), np.array(b), np.array(c), np.array(d)
 
@@ -109,6 +110,7 @@ class AbstractSystem(metaclass=ABCMeta):
         ----------
         num_states : int
             number of system state variables
+
         """
         self._state = np.zeros((num_states,))
 
@@ -119,6 +121,7 @@ class AbstractSystem(metaclass=ABCMeta):
         -------
         (num_states,) ndarray
             current system state
+
         """
         return self._state
 
@@ -129,6 +132,7 @@ class AbstractSystem(metaclass=ABCMeta):
         ----------
         state : (num_states,) array_like
             new system state
+
         """
         self._state[:] = np.array(state)
 
@@ -148,6 +152,7 @@ class AbstractSystem(metaclass=ABCMeta):
         -------
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
+
         """
         self._state, output = self.push_pure(self._state, inp)
         return output
@@ -174,6 +179,7 @@ class AbstractSystem(metaclass=ABCMeta):
 
         output : (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
+
         """
         state = np.array(state)
         inp = np.array(inp)
@@ -202,6 +208,7 @@ class AbstractSystem(metaclass=ABCMeta):
         -------
         (num_states,) ndarray
             state vector at time :math:`k + 1`
+
         """
         pass
 
@@ -225,6 +232,7 @@ class AbstractSystem(metaclass=ABCMeta):
         -------
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
+
         """
         pass
 
@@ -262,6 +270,7 @@ class StateSpace(AbstractSystem):
                     \mathbf{A} & \mathbf{B} \\
                     \mathbf{C} & \mathbf{D}
                 \end{bmatrix}
+
         """
         self.a = np.array(a)
         self.b = np.array(b)
@@ -300,6 +309,7 @@ class StateSpace(AbstractSystem):
         -------
         (num_states,) ndarray
             state vector at time :math:`k + 1`
+
         """
         return self.a @ state + self.b @ inp
 
@@ -323,6 +333,7 @@ class StateSpace(AbstractSystem):
         -------
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
+
         """
         return self.c @ state + self.d @ inp
 
@@ -373,6 +384,7 @@ class StateSpaceBuilder():
         -------
         controlboros.StateSpace
             built discrete-time LTI system
+
         """
         # Check if all system matrices are specified
         if any(m is None for m in [self._a, self._b, self._c, self._d]):
@@ -398,6 +410,7 @@ class StateSpaceBuilder():
         -------
         controlboros.StateSpaceBuilder
             intermediate builder object
+
         """
         tf = signal.TransferFunction(num, den).to_ss()
         self._a, self._b, self._c, self._d = tf.A, tf.B, tf.C, tf.D
@@ -421,6 +434,7 @@ class StateSpaceBuilder():
         -------
         controlboros.StateSpaceBuilder
             intermediate builder object
+
         """
         zpk = signal.ZerosPolesGain(zeros, poles, gain).to_ss()
         self._a, self._b, self._c, self._d = zpk.A, zpk.B, zpk.C, zpk.D
@@ -448,6 +462,7 @@ class StateSpaceBuilder():
         -------
         controlboros.StateSpaceBuilder
             intermediate builder object
+
         """
         self._a, self._b, self._c = np.array(a), np.array(b), np.array(c)
 
@@ -483,6 +498,7 @@ class StateSpaceBuilder():
         -------
         controlboros.StateSpaceBuilder
             intermediate builder object
+
         """
         self._a, self._b, self._c, self._d, _ = signal.cont2discrete(
             (self._a, self._b, self._c, self._d),
@@ -516,6 +532,7 @@ class RateWrapper(AbstractSystem):
             sample rate multiplier, i.e. for how many samples
             should the system's output be held constant;
             must be an integer greater than 1
+
         """
         if not isinstance(rate_multiplier, int):
             raise ValueError("Rate multiplier must be an integer.")
@@ -535,6 +552,7 @@ class RateWrapper(AbstractSystem):
         -------
         (num_states,) ndarray
             current system state
+
         """
         return self._system.get_state()
 
@@ -545,6 +563,7 @@ class RateWrapper(AbstractSystem):
         ----------
         state : (num_states,) array_like
             new system state
+
         """
         self._system.set_state(state)
 
@@ -553,7 +572,7 @@ class RateWrapper(AbstractSystem):
         self._system.set_state_to_zero()
 
     def push_stateful(self, inp):
-        """Call wrapped system's push_stateful() or use buffered output.
+        """Call wrapped system's push_stateful or use buffered output.
 
         This function uses an internal counter to decide whether the wrapped
         system (and the buffered output) should be updated. If not, it just
@@ -568,6 +587,7 @@ class RateWrapper(AbstractSystem):
         -------
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
+
         """
         if self._counter >= self.rate_multiplier:
             self._counter = 0
@@ -601,11 +621,12 @@ class RateWrapper(AbstractSystem):
 
         output : (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
+
         """
         return self._system.push_pure(state, inp)
 
     def dynamics(self, state, inp):
-        """Call wrapped system's dynamics() method.
+        """Call wrapped system's dynamics method.
 
         Note
         ----
@@ -623,11 +644,12 @@ class RateWrapper(AbstractSystem):
         -------
         (num_states,) ndarray
             state vector at time :math:`k + 1`
+
         """
         return self._system.dynamics(state, inp)
 
     def output(self, state, inp):
-        """Call wrapped system's output() method.
+        """Call wrapped system's output method.
 
         Note
         ----
@@ -645,6 +667,7 @@ class RateWrapper(AbstractSystem):
         -------
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
+
         """
         return self._system.output(state, inp)
 
@@ -695,6 +718,7 @@ class TimeDelay(AbstractSystem):
 
         dim : int, optional
             signal dimension, scalar by default
+
         """
         if not isinstance(num_samples, int):
             raise ValueError("Number of delay samples must be an integer.")
@@ -726,6 +750,7 @@ class TimeDelay(AbstractSystem):
         -------
         (num_states,) ndarray
             state vector at time :math:`k + 1`
+
         """
         return np.concatenate((state[self.dim:], inp))
 
@@ -746,5 +771,6 @@ class TimeDelay(AbstractSystem):
         -------
         (num_outputs,) ndarray
             output vector at time :math:`k` *(sic!)*
+
         """
         return state[:self.dim]

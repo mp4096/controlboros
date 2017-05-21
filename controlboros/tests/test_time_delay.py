@@ -13,7 +13,6 @@ def test_delay_exception_delay_non_integer():
 
 def test_delay_exception_delay_leq_zero():
     """Test exception if num samples is less or equal 0."""
-
     ref_msg = "Number of delay samples must be greater than 0"
 
     with pytest.raises(ValueError) as excinfo:
@@ -34,7 +33,6 @@ def test_delay_exception_dim_non_integer():
 
 def test_delay_exception_dim_leq_zero():
     """Test exception if signal dim is less or equal 0."""
-
     ref_msg = "Dimension of signal must be greater than 0"
 
     with pytest.raises(ValueError) as excinfo:
