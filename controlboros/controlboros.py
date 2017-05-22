@@ -190,7 +190,11 @@ class AbstractSystem(metaclass=ABCMeta):
 
     @abstractmethod
     def dynamics(self, state, inp):
-        """Abstract system dynamics.
+        r"""Abstract system dynamics.
+
+        .. math::
+
+            \mathbf{x}[k + 1] = f(\mathbf{x}[k], \mathbf{u}[k])
 
         Note
         ----
@@ -214,7 +218,11 @@ class AbstractSystem(metaclass=ABCMeta):
 
     @abstractmethod
     def output(self, state, inp):
-        """Abstract system output.
+        r"""Abstract system output.
+
+        .. math::
+
+            \mathbf{y}[k] = g(\mathbf{x}[k], \mathbf{u}[k])
 
         Note
         ----
