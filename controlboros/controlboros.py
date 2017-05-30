@@ -64,10 +64,13 @@ def _state_space_dimensions_ok(a, b, c, d):
     ----------
     a : (num_states, num_states) array_like
         state matrix :math:`\mathbf{A}`
+
     b : (num_states, num_inputs) array_like
         input matrix :math:`\mathbf{B}`
+
     c : (num_outputs, num_states) array_like
         output matrix :math:`\mathbf{C}`
+
     d : (num_outputs, num_inputs) array_like
         feedthrough matrix :math:`\mathbf{D}`
 
