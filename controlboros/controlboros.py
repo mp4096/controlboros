@@ -880,13 +880,13 @@ class FastSISOTimeDelay(AbstractSystem):
         return self._state.popleft()
 
     def push_pure(self, state, inp):
-        """This function is not used in the fast implementation."""
-        raise NotImplemented
+        """Do not use this function."""
+        return None
 
     def dynamics(self, state, inp):
-        """This function is not used in the fast implementation."""
-        raise NotImplemented
+        """Do not use this function."""
+        return None
 
     def output(self, state, inp):
-        """This function is not used in the fast implementation."""
-        raise NotImplemented
+        """Do not use this function."""
+        return None
