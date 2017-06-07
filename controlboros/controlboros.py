@@ -50,9 +50,18 @@ Some useful systems
     :members:
     :undoc-members:
     :show-inheritance:
+
+:class:`FastSISOTimeDelay`
+--------------------------
+
+.. autoclass:: FastSISOTimeDelay
+    :members:
+    :undoc-members:
+    :show-inheritance:
 """
 
 from abc import ABCMeta, abstractmethod
+from collections import deque
 import numpy as np
 from scipy import signal
 
@@ -785,3 +794,99 @@ class TimeDelay(AbstractSystem):
 
         """
         return state[:self.dim]
+
+
+class FastSISOTimeDelay(AbstractSystem):
+    r"""Fast SISO discrete time delay system.
+
+    This object provides a :math:`m` samples long delay line.
+    It supports only scalar signals and is faster than :class:`TimeDelay`.
+
+    Its state vector is given by the following vector
+    of dimension :math:`m`:
+
+    .. math::
+
+        \begin{bmatrix}
+            x[k - m] \\
+            \vdots \\
+            x[k - 2] \\
+            x[k - 1] \\
+        \end{bmatrix}
+
+    """
+
+    def __init__(self, num_samples):
+        """Create a time delay line.
+
+        Parameters
+        ----------
+        num_samples : int
+            delay length (in samples), must be greater than 0
+
+        """
+        if not isinstance(num_samples, int):
+            raise ValueError("Number of delay samples must be an integer.")
+
+        if num_samples <= 0:
+            raise ValueError("Number of delay samples must be greater than 0.")
+
+        self._state = deque(np.zeros((num_samples,)), maxlen=num_samples)
+
+    def get_state(self):
+        """Get current system state.
+
+        Returns
+        -------
+        (num_states,) ndarray
+            current system state
+
+        """
+        return np.array(self._state)
+
+    def set_state(self, state):
+        """Set current system state.
+
+        Parameters
+        ----------
+        state : (num_states,) array_like
+            new system state
+
+        """
+        temp_state = np.empty((len(self._state),))
+        temp_state[:] = np.array(state)
+        self._state = deque(temp_state, maxlen=len(temp_state))
+
+    def set_state_to_zero(self):
+        """Set current system state to zeros."""
+        old_len = len(self._state)
+        self._state = deque(np.zeros((old_len,)), maxlen=old_len)
+
+    def push_stateful(self, inp):
+        """Push an input into system, get the output, update system state.
+
+        Parameters
+        ----------
+        inp : float
+            input vector at time :math:`k`
+
+        Returns
+        -------
+        float
+            output vector at time :math:`k` *(sic!)*
+
+        """
+        self._state.append(inp)
+        return self._state.popleft()
+
+    def push_pure(self, state, inp):
+        """This function is not used in the fast implementation."""
+        raise NotImplemented
+
+    def dynamics(self, state, inp):
+        """This function is not used in the fast implementation."""
+        raise NotImplemented
+
+    def output(self, state, inp):
+        """This function is not used in the fast implementation."""
+        raise NotImplemented
