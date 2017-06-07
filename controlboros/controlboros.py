@@ -160,7 +160,7 @@ class AbstractSystem(metaclass=ABCMeta):
 
         Parameters
         ----------
-        inp : (num_inputs,) array_like
+        inp : (num_inputs,) ndarray
             input vector at time :math:`k`
 
         Returns
@@ -181,10 +181,10 @@ class AbstractSystem(metaclass=ABCMeta):
 
         Parameters
         ----------
-        state : (num_states,) array_like
+        state : (num_states,) ndarray
             state vector at time :math:`k`
 
-        inp : (num_inputs,) array_like
+        inp : (num_inputs,) ndarray
             input vector at time :math:`k`
 
         Returns
@@ -196,9 +196,6 @@ class AbstractSystem(metaclass=ABCMeta):
             output vector at time :math:`k` *(sic!)*
 
         """
-        state = np.array(state)
-        inp = np.array(inp)
-
         new_state = self.dynamics(state, inp)
         output = self.output(state, inp)
         return new_state, output
@@ -603,7 +600,7 @@ class RateWrapper(AbstractSystem):
 
         Parameters
         ----------
-        inp : (num_inputs,) array_like
+        inp : (num_inputs,) ndarray
             input vector at time :math:`k`
 
         Returns
@@ -631,10 +628,10 @@ class RateWrapper(AbstractSystem):
 
         Parameters
         ----------
-        state : (num_states,) array_like
+        state : (num_states,) ndarray
             state vector at time :math:`k`
 
-        inp : (num_inputs,) array_like
+        inp : (num_inputs,) ndarray
             input vector at time :math:`k`
 
         Returns
