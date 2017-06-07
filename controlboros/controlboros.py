@@ -51,10 +51,10 @@ Some useful systems
     :undoc-members:
     :show-inheritance:
 
-:class:`FastSISOTimeDelay`
+:class:`FastSisoTimeDelay`
 --------------------------
 
-.. autoclass:: FastSISOTimeDelay
+.. autoclass:: FastSisoTimeDelay
     :members:
     :undoc-members:
     :show-inheritance:
@@ -796,7 +796,7 @@ class TimeDelay(AbstractSystem):
         return state[:self.dim]
 
 
-class FastSISOTimeDelay(AbstractSystem):
+class FastSisoTimeDelay(AbstractSystem):
     r"""Fast SISO discrete time delay system.
 
     This object provides a :math:`m` samples long delay line.
