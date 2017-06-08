@@ -43,8 +43,11 @@ Rate wrapper for multirate simulations
 Some useful systems
 ===================
 
-:class:`Time delay`
--------------------
+Time delay lines
+----------------
+
+:class:`TimeDelay`
+~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: TimeDelay
     :members:
@@ -52,7 +55,7 @@ Some useful systems
     :show-inheritance:
 
 :class:`FastSisoTimeDelay`
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: FastSisoTimeDelay
     :members:
