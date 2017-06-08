@@ -799,8 +799,10 @@ class TimeDelay(AbstractSystem):
 class FastSisoTimeDelay(AbstractSystem):
     r"""Fast SISO discrete time delay system.
 
-    This object provides a :math:`m` samples long delay line.
-    It supports only scalar signals and is faster than :class:`TimeDelay`.
+    This object provides a :math:`m` samples long delay line only
+    for scalar signals. Since it uses a deque as a buffer with O(1) push
+    and pop costs at both ends, it is significantly faster than the
+    standard MIMO :class:`TimeDelay`.
 
     Its state vector is given by the following vector
     of dimension :math:`m`:
@@ -813,6 +815,15 @@ class FastSisoTimeDelay(AbstractSystem):
             x[k - 2] \\
             x[k - 1] \\
         \end{bmatrix}
+
+    Note
+    ----
+    Due to its lower-level implementation, this class does not implement
+    methods :meth:`push_pure`, :meth:`dynamics` and :meth:`output`.
+
+    On the other hand, methods :meth:`set_state`, :meth:`set_state_to_zero`,
+    :meth:`get_state` and :meth:`push_stateful` offer an interface similar
+    to the standard models derived from :class:`AbstractSystem` .
 
     """
 
