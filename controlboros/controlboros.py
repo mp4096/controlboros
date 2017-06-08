@@ -831,7 +831,7 @@ class FastSisoTimeDelay(AbstractSystem):
         if num_samples <= 0:
             raise ValueError("Number of delay samples must be greater than 0.")
 
-        self._state = deque(np.zeros((num_samples,)), maxlen=num_samples)
+        self._state = deque(np.zeros((num_samples,)), maxlen=(num_samples + 1))
 
     def get_state(self):
         """Get current system state.
@@ -855,12 +855,12 @@ class FastSisoTimeDelay(AbstractSystem):
         """
         temp_state = np.empty((len(self._state),))
         temp_state[:] = np.array(state)
-        self._state = deque(temp_state, maxlen=len(temp_state))
+        self._state = deque(temp_state, maxlen=(len(temp_state) + 1))
 
     def set_state_to_zero(self):
         """Set current system state to zeros."""
         old_len = len(self._state)
-        self._state = deque(np.zeros((old_len,)), maxlen=old_len)
+        self._state = deque(np.zeros((old_len,)), maxlen=(old_len + 1))
 
     def push_stateful(self, inp):
         """Push an input into system, get the output, update system state.
