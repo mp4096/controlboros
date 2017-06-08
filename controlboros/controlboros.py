@@ -823,7 +823,15 @@ class FastSisoTimeDelay(AbstractSystem):
 
     On the other hand, methods :meth:`set_state`, :meth:`set_state_to_zero`,
     :meth:`get_state` and :meth:`push_stateful` offer an interface similar
-    to the standard models derived from :class:`AbstractSystem` .
+    to the standard models derived from :class:`AbstractSystem`.
+
+    Note
+    ----
+    In contrast to :class:`TimeDelay`, this system input and output is
+    a scalar ``float``, not an ``ndarray`` of shape ``(1,)``!
+
+    However, you can *still* push an ``ndarray`` into this time delay line;
+    in this case, the performance will be severely reduced.
 
     """
 
