@@ -13,4 +13,5 @@ from .controlboros import (
     StateSpaceBuilder,
     RateWrapper,
     TimeDelay,
+    FastSisoTimeDelay,
     )

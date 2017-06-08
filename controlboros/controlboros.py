@@ -50,9 +50,18 @@ Some useful systems
     :members:
     :undoc-members:
     :show-inheritance:
+
+:class:`FastSisoTimeDelay`
+--------------------------
+
+.. autoclass:: FastSisoTimeDelay
+    :members:
+    :undoc-members:
+    :show-inheritance:
 """
 
 from abc import ABCMeta, abstractmethod
+from collections import deque
 import numpy as np
 from scipy import signal
 
@@ -785,3 +794,118 @@ class TimeDelay(AbstractSystem):
 
         """
         return state[:self.dim]
+
+
+class FastSisoTimeDelay(AbstractSystem):
+    r"""Fast SISO discrete time delay system.
+
+    This object provides a :math:`m` samples long delay line only
+    for scalar signals. Since it uses a deque as a buffer with O(1) push
+    and pop costs at both ends, it is significantly faster than the
+    standard MIMO :class:`TimeDelay`.
+
+    Its state vector is given by the following vector
+    of dimension :math:`m`:
+
+    .. math::
+
+        \begin{bmatrix}
+            x[k - m] \\
+            \vdots \\
+            x[k - 2] \\
+            x[k - 1] \\
+        \end{bmatrix}
+
+    Note
+    ----
+    Due to its lower-level implementation, this class does not implement
+    methods :meth:`push_pure`, :meth:`dynamics` and :meth:`output`.
+
+    On the other hand, methods :meth:`set_state`, :meth:`set_state_to_zero`,
+    :meth:`get_state` and :meth:`push_stateful` offer an interface similar
+    to the standard models derived from :class:`AbstractSystem`.
+
+    Note
+    ----
+    In contrast to :class:`TimeDelay`, this system input and output is
+    a scalar ``float``, not an ``ndarray`` of shape ``(1,)``!
+
+    However, you can *still* push an ``ndarray`` into this time delay line;
+    in this case, the performance will be severely reduced.
+
+    """
+
+    def __init__(self, num_samples):
+        """Create a time delay line.
+
+        Parameters
+        ----------
+        num_samples : int
+            delay length (in samples), must be greater than 0
+
+        """
+        if not isinstance(num_samples, int):
+            raise ValueError("Number of delay samples must be an integer.")
+
+        if num_samples <= 0:
+            raise ValueError("Number of delay samples must be greater than 0.")
+
+        self._state = deque(np.zeros((num_samples,)), maxlen=(num_samples + 1))
+
+    def get_state(self):
+        """Get current system state.
+
+        Returns
+        -------
+        (num_states,) ndarray
+            current system state
+
+        """
+        return np.array(self._state)
+
+    def set_state(self, state):
+        """Set current system state.
+
+        Parameters
+        ----------
+        state : (num_states,) array_like
+            new system state
+
+        """
+        temp_state = np.empty((len(self._state),))
+        temp_state[:] = np.array(state)
+        self._state = deque(temp_state, maxlen=(len(temp_state) + 1))
+
+    def set_state_to_zero(self):
+        """Set current system state to zeros."""
+        old_len = len(self._state)
+        self._state = deque(np.zeros((old_len,)), maxlen=(old_len + 1))
+
+    def push_stateful(self, inp):
+        """Push an input into system, get the output, update system state.
+
+        Parameters
+        ----------
+        inp : float
+            input vector at time :math:`k`
+
+        Returns
+        -------
+        float
+            output vector at time :math:`k` *(sic!)*
+
+        """
+        self._state.append(inp)
+        return self._state.popleft()
+
+    def push_pure(self, state, inp):
+        """Do not use this function."""
+        return None
+
+    def dynamics(self, state, inp):
+        """Do not use this function."""
+        return None
+
+    def output(self, state, inp):
+        """Do not use this function."""
+        return None
